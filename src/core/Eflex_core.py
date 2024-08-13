@@ -13,7 +13,7 @@ class Eflex_core:
     def to_activity(self):
         with allure.step('Select section module'):
             self.driver.set_window_size(1920, 1080)
-            button_element = self.driver.find_element(By.XPATH, '//*[@id="root"]/div/div/section/main/div[4]/div[1]/div[2]/span/button')
+            button_element = WebDriverWait(self.driver, 50).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="root"]/div/div/section/main/div[4]/div[1]/div[2]/span/button')))
             self.driver.execute_script("arguments[0].scrollIntoView(true);", button_element)
 
             WebDriverWait(self.driver, 50).until(
@@ -60,3 +60,14 @@ class Eflex_core:
             return "Audio"
         else:
             return "Text"
+
+    def reach_site(self):
+        self.driver.get("https://eflexv2.asal-dev1.eflexlanguages.com/login")
+
+        element = WebDriverWait(self.driver, 50).until(EC.presence_of_element_located((By.ID, "details-button")))
+        element.click()
+
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+        WebDriverWait(self.driver, 50).until(EC.presence_of_element_located((By.CSS_SELECTOR, "#proceed-link"))).click()
+
+        WebDriverWait(self.driver, 50).until(EC.presence_of_element_located((By.CSS_SELECTOR, '#username')))
